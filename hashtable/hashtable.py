@@ -22,7 +22,9 @@ class HashTable:
 
     def __init__(self, capacity):
         # Your code here
-
+        self.table = [None] * capacity
+        self.capacity = capacity
+        self.counter = 0
 
     def get_num_slots(self):
         """
@@ -35,6 +37,7 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        return len(self.table)
 
 
     def get_load_factor(self):
@@ -44,7 +47,7 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
+        return self.counter / self.capacity
 
     def fnv1(self, key):
         """
@@ -54,6 +57,16 @@ class HashTable:
         """
 
         # Your code here
+        hash = 14695981039346656037
+        #setting hash to offset_basis
+        #source: https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function
+
+        for h in key:
+            # multiple hash by FNV_prime
+            hash = hash ^ ord(h)
+            hash = hash * 1099511628211
+        return hash
+
 
 
     def djb2(self, key):
@@ -70,8 +83,8 @@ class HashTable:
         Take an arbitrary key and return a valid integer index
         between within the storage capacity of the hash table.
         """
-        #return self.fnv1(key) % self.capacity
-        return self.djb2(key) % self.capacity
+        return self.fnv1(key) % self.capacity
+        #return self.djb2(key) % self.capacity
 
     def put(self, key, value):
         """
@@ -82,7 +95,17 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
+        index = self.hash_index(key)
+        if self.table[index] is not None:
+            for k in self.table[index]:
+                if k[0] == key:
+                    k[1] = value
+                    break
+                else:
+                    self.table[index].append([key, value])
+        else:
+            self.table[index] = []
+            self.table[index].append([key, value])
 
     def delete(self, key):
         """
@@ -93,7 +116,15 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
+        index = self.hash_index(key)
+        if self.table[index] is None:
+            raise KeyError()
+        else:
+            for k in self.table[index]:
+                if k[0] == key:
+                    k[1] = None
+                    return k[1]
+            raise KeyError()
 
     def get(self, key):
         """
@@ -104,7 +135,15 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
+        index = self.hash_index(key)
+        if self.table[index] is None:
+            raise KeyError()
+        
+        else:
+            for k in self.table[index]:
+                if k[0] == key:
+                    return k[1]
+        raise KeyError()
 
     def resize(self, new_capacity):
         """
@@ -114,7 +153,8 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
+        self.table = new_capacity
+        self.new_capacity = new_capacity
 
 
 if __name__ == "__main__":
