@@ -97,9 +97,9 @@ class HashTable:
         # Your code here
         index = self.hash_index(key)
         if self.table[index] is not None:
-            for key in self.table[index]:
-                if key[0] == key:
-                    key[1] = value
+            for k in self.table[index]:
+                if k[0] == key:
+                    k[1] = value
                     break
                 else:
                     self.table[index].append([key, value])
@@ -120,10 +120,10 @@ class HashTable:
         if self.table[index] is None:
             raise KeyError()
         else:
-            for key in self.table[index]:
-                if key[0] == key:
-                    key[1] = None
-                    return key[1]
+            for k in self.table[index]:
+                if k[0] == key:
+                    k[1] = None
+                    return k[1]
             raise KeyError()
 
     def get(self, key):
@@ -140,9 +140,9 @@ class HashTable:
             raise KeyError()
         
         else:
-            for key in self.table[index]:
-                if key[0] == key:
-                    return key[1]
+            for k in self.table[index]:
+                if k[0] == key:
+                    return k[1]
         raise KeyError()
 
     def resize(self, new_capacity):
